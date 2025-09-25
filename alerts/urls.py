@@ -10,4 +10,5 @@ router.register(r'user', UserAlertViewSet, basename='alert-user')
 urlpatterns = [
     path('', include(router.urls)),
     path('analytics/', AnalyticsView.as_view(), name='alert-analytics'),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
