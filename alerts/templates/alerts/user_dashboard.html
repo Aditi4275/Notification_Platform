@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Your Alerts</h1>
+<ul>
+  {% for item in alerts_with_status %}
+    <li>
+      <strong>{{ item.alert.title }}</strong> - {{ item.alert.message }}<br/>
+      Severity: {{ item.alert.get_severity_display }}<br/>
+      Snoozed today? {{ item.snoozed }}<br/>
+      Status: {% if item.read %}Read{% else %}Unread{% endif %}<br/>
+      
+      <form method="post" action="{% url 'alert-user-snooze' item.alert.id %}">
+        {% csrf_token %}
+        <button type="submit" {% if item.snoozed %}disabled{% endif %}>Snooze</button>
+      </form>
+      
+      <form method="post" action="{% url 'alert-user-mark-read' item.alert.id %}">
+        {% csrf_token %}
+        <button type="submit">{% if item.read %}Mark Unread{% else %}Mark Read{% endif %}</button>
+      </form>
+    </li>
+  {% empty %}
+    <li>No alerts currently.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

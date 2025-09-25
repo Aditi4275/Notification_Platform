@@ -1,0 +1,23 @@
+databases:
+  - name: notificationsdb
+    plan: free
+    databaseName: notificationsdb
+    user: notificationsuser
+
+services:
+  - type: web
+    plan: free
+    name: notification-platform
+    runtime: python
+    buildCommand: "/build.sh"
+    startCommand: "gunicorn notification_platform.asgi:application  -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: notificationsdb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: "4"
+        

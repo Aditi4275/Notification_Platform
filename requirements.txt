@@ -1,0 +1,11 @@
+Django>=4.2,<5
+djangorestframework
+djangorestframework-simplejwt
+dj-database-url
+psycopg2-binary
+whitenoise[brotli]
+gunicorn
+uvicorn
+celery
+redis
+python-dotenv
