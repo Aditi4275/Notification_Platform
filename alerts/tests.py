@@ -3,6 +3,11 @@ from .models import Alert
 # Create your tests here.
 
 class AlertModelTest(TestCase):
+    def setUp(self):
+        self.team = Team.objects.create(name="Test Team")
+        self.user = User.objects.create_user(username='testuser', email='test@example.com')
+        self.user_profile = UserProfile.objects.create(user=self.user, team=self.team)
+
     def test_alert_creation(self):
         alert = Alert.objects.create(
             title="Test",
