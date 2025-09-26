@@ -1,9 +1,7 @@
-// Add logout button event listener
 document.getElementById('logoutBtn')?.addEventListener('click', function() {
   logout();
 });
 
-// Handle form submission for creating new alerts
 document.getElementById('createAlertForm')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   
@@ -67,7 +65,6 @@ async function loadAlerts() {
       }
     });
     
-    // Handle unauthorized access
     if (res.status === 401 || res.status === 403) {
       window.location.href = '../index.html';
       return;
