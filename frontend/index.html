@@ -1,37 +1,64 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Notification Platform - Welcome</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet" />
-  <style>
-    .glow-button {
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from {
-        box-shadow: 0 0 8px 0 rgba(59, 130, 246, 0.7);
-      }
-      to {
-        box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.25);
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alert Management System</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center font-sans">
-  <div class="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 text-center">
-    <h1 class="text-4xl font-extrabold mb-6 text-indigo-700 tracking-wide">Welcome to Alertify</h1>
-    <p class="text-gray-600 mb-10">Stay informed with timely notifications tailored for you.</p>
-
-    <div class="flex flex-col sm:flex-row justify-center gap-6">
-      <button onclick="window.location.href='/frontend/user_login.html'"
-        class="glow-button bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-full text-white text-lg font-semibold transition-shadow duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300">User</button>
-      <button onclick="window.location.href='/frontend/admin_login.html'"
-        class="bg-gray-200 hover:bg-gray-300 px-8 py-3 rounded-full text-gray-700 text-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-gray-400">Admin</button>
+<body>
+  <div class="main-container">
+    <div class="header-section">
+      <div class="logo-container">
+        <i class="fas fa-bell logo-icon"></i>
+      </div>
+      <h1 class="title">Alert Management System</h1>
+      <p class="subtitle">Stay informed with real-time notifications</p>
     </div>
 
-    <p class="mt-12 text-sm text-gray-400">© 2025 Alertify Inc.</p>
+    <div class="card">
+      <h2 class="card-title">Access Dashboard</h2>
+      <p class="card-subtitle">Select your role to continue</p>
+      
+      <div class="role-cards">
+        <!-- User Card -->
+        <div class="role-card" onclick="window.location.href='user_login.html'">
+          <div class="role-icon-container">
+            <i class="fas fa-user role-icon"></i>
+          </div>
+          <h3 class="role-title">User Access</h3>
+          <p class="role-description">View and manage your alerts</p>
+          <button class="btn user-btn">
+            <i class="fas fa-sign-in-alt btn-icon"></i> User Login
+          </button>
+        </div>
+
+        <!-- Admin Card -->
+        <div class="role-card" onclick="window.location.href='admin_login.html'">
+          <div class="role-icon-container">
+            <i class="fas fa-crown role-icon"></i>
+          </div>
+          <h3 class="role-title">Admin Access</h3>
+          <p class="role-description">Create, manage, and configure alerts</p>
+          <button class="btn admin-btn">
+            <i class="fas fa-shield-alt btn-icon"></i> Admin Login
+          </button>
+        </div>
+      </div>
+
+      <div class="signup-section">
+        <p class="signup-text">Need an account? 
+          <a href="user_signup.html" class="signup-link">Sign up here</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 Alert Management System. All rights reserved.</p>
+    </div>
   </div>
+
+  <script src="js/auth_utils.js"></script>
 </body>
 </html>

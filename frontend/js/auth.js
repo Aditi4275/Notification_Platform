@@ -1,5 +1,3 @@
-// Include utility functions
-// (In a real implementation, we'd use import, but for now we'll ensure functions are available)
 
 // Handle user login
 document.getElementById('loginForm')?.addEventListener('submit', async function(e){
@@ -125,13 +123,11 @@ document.getElementById('signupForm')?.addEventListener('submit', async function
 
 // Helper function to get CSRF token
 function getCSRFToken() {
-  // Get CSRF token from cookie
   let name = 'csrftoken';
   let value = '; ' + document.cookie;
   let parts = value.split('; ' + name + '=');
   if (parts.length === 2) return parts.pop().split(';').shift();
   
-  // If not found in cookie, check for meta tag
   let token = document.querySelector('[name=csrfmiddlewaretoken]');
   if (token) return token.value;
   
