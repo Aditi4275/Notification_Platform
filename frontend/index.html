@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notification Platform - Welcome</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .glow-button {
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 8px 0 rgba(59, 130, 246, 0.7);
+      }
+      to {
+        box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.25);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center font-sans">
+  <div class="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 text-center">
+    <h1 class="text-4xl font-extrabold mb-6 text-indigo-700 tracking-wide">Welcome to Alertify</h1>
+    <p class="text-gray-600 mb-10">Stay informed with timely notifications tailored for you.</p>
+
+    <div class="flex flex-col sm:flex-row justify-center gap-6">
+      <button onclick="window.location.href='/frontend/user_login.html'"
+        class="glow-button bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-full text-white text-lg font-semibold transition-shadow duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300">User</button>
+      <button onclick="window.location.href='/frontend/admin_login.html'"
+        class="bg-gray-200 hover:bg-gray-300 px-8 py-3 rounded-full text-gray-700 text-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-gray-400">Admin</button>
+    </div>
+
+    <p class="mt-12 text-sm text-gray-400">© 2025 Alertify Inc.</p>
+  </div>
+</body>
+</html>

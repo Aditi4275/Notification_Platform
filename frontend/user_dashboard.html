@@ -1,0 +1,18 @@
+<html lang="en">
+<head>
+  <title>User Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+  <nav class="bg-blue-600 p-4 text-white text-xl flex justify-between items-center">
+    <span>User Dashboard</span>
+    <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+  </nav>
+  <main class="p-6">
+    <h2 class="text-lg font-bold mb-4">Your Alerts</h2>
+    <div id="alerts" class="space-y-4"></div>
+  </main>
+  <script src="js/auth_utils.js"></script>
+  <script src="js/user_dashboard.js"></script>
+</body>
+</html>
