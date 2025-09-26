@@ -34,8 +34,8 @@ A comprehensive notification platform that allows users to receive alerts and ad
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Aditi4275/Notification_Platform.git
-   cd Notification_Platform
+   git clone https://github.com/Aditi4275/Alertify.git
+   cd Alertify
    ```
 
 2. **Create a virtual environment:**
