@@ -7,13 +7,15 @@ document.getElementById('logoutBtn')?.addEventListener('click', function() {
 document.getElementById('createAlertForm')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   
-  const title = document.getElementById('alertTitle').value;
-  const message = document.getElementById('alertMessage').value;
-  const severity = document.getElementById('alertSeverity').value;
-  const startTime = document.getElementById('startTime').value;
-  const expiryTime = document.getElementById('expiryTime').value;
-  const visibility = document.getElementById('visibility').value;
-  const reminderFreq = document.getElementById('reminderFreq').value;
+  const formData = new FormData(e.target);
+  const title = formData.get('title');
+  const message = formData.get('message');
+  const severity = formData.get('severity');
+  const delivery_type = formData.get('delivery_type');
+  const start_time = formData.get('start_time');
+  const expiry_time = formData.get('expiry_time');
+  const reminder_frequency = formData.get('reminder_frequency');
+  const reminder_enabled = formData.get('reminder_enabled');
   
   try {
     const response = await fetch('/alerts/admin/', {
@@ -26,32 +28,34 @@ document.getElementById('createAlertForm')?.addEventListener('submit', async fun
         title: title,
         message: message,
         severity: severity,
-        start_time: startTime,
-        expiry_time: expiryTime,
-        visibility: visibility,
-        reminder_frequency: parseInt(reminderFreq),
-        delivery_type: 'INAPP',
+        delivery_type: delivery_type,
+        start_time: start_time,
+        expiry_time: expiry_time,
+        reminder_frequency: parseInt(reminder_frequency),
         is_active: true,
         archived: false
       })
     });
     
     if (response.ok) {
-      // Reset form
-      document.getElementById('createAlertForm').reset();
-      // Reload alerts
+      e.target.reset();
+      e.target.elements['reminder_frequency'].value = 2;
+      e.target.elements['reminder_enabled'].checked = true;
       await loadAlerts();
-      alert('Alert created successfully!');
+      document.getElementById('creationStatus').textContent = 'Alert created successfully!';
+      setTimeout(() => {
+        document.getElementById('creationStatus').textContent = '';
+      }, 3000);
     } else if (response.status === 401 || response.status === 403) {
       window.location.href = '../index.html';
     } else {
       const errorData = await response.json();
       console.error('Error creating alert:', errorData);
-      alert('Failed to create alert. Please check the form data.');
+      document.getElementById('creationStatus').textContent = 'Failed to create alert. Please check the form data.';
     }
   } catch (error) {
     console.error('Error creating alert:', error);
-    alert('Network error. Please try again.');
+    document.getElementById('creationStatus').textContent = 'Network error. Please try again.';
   }
 });
 
@@ -71,42 +75,67 @@ async function loadAlerts() {
     
     if (res.ok) {
       const alerts = await res.json();
-      const tableBody = document.getElementById('adminAlertsTable');
+      const tableBody = document.getElementById('alertsTableBody');
       
       if (alerts.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No alerts available</td></tr>';
-        updateStats([], alerts);
+        tableBody.innerHTML = '<tr><td colspan="8" style="padding: 1.5rem; text-align: center; color: #6b7280; font-size: 0.875rem;">No alerts available</td></tr>';
+        updateStats(alerts);
         return;
       }
       
       // Build table rows
       let tableHTML = '';
       alerts.forEach(alert => {
+        const isExpired = new Date(alert.expiry_time) < new Date();
+        const status = isExpired ? 'Expired' : (alert.is_active ? 'Active' : 'Inactive');
+        
+        // Determine status style based on status
+        let statusStyle = '';
+        if (isExpired) {
+          statusStyle = 'background-color: #fecaca; color: #b91c1c;'; // Red for expired
+        } else if (alert.is_active) {
+          statusStyle = 'background-color: #dcfce7; color: #166534;'; // Green for active
+        } else {
+          statusStyle = 'background-color: #e5e7eb; color: #374151;'; // Gray for inactive
+        }
+        
+        // Determine severity style
+        let severityStyle = getSeverityStyle(alert.severity);
+        
         tableHTML += `
-          <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="font-medium text-gray-900">${alert.title}</div>
-              <div class="text-sm text-gray-500">${truncateText(alert.message, 50)}</div>
+          <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 0.75rem; vertical-align: top;">
+              <div style="font-weight: 500; color: #1f2937; margin-bottom: 0.25rem;">${alert.title}</div>
+              <div style="font-size: 0.75rem; color: #6b7280; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${truncateText(alert.message, 50)}</div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getSeverityClassFull(alert.severity)}">
+            <td style="padding: 0.75rem; vertical-align: top;">
+              <span style="padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; ${severityStyle}">
                 ${alert.severity}
               </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              ${alert.visibility}
+            <td style="padding: 0.75rem; vertical-align: top; font-size: 0.8rem; color: #4b5563;">
+              ${alert.visibility || 'N/A'}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${alert.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
-                ${alert.is_active ? 'Active' : 'Inactive'}
+            <td style="padding: 0.75rem; vertical-align: top; font-size: 0.8rem; color: #4b5563;">
+              ${new Date(alert.start_time).toLocaleString()}
+            </td>
+            <td style="padding: 0.75rem; vertical-align: top; font-size: 0.8rem; color: #4b5563;">
+              ${new Date(alert.expiry_time).toLocaleString()}
+            </td>
+            <td style="padding: 0.75rem; vertical-align: top;">
+              <span style="padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; ${statusStyle}">
+                ${status}
               </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <button class="text-red-600 hover:text-red-900 mr-3" onclick="archiveAlert('${alert.id}')">
-                <i class="fas fa-archive"></i> Archive
+            <td style="padding: 0.75rem; vertical-align: top; font-size: 0.8rem; color: #4b5563;">
+              Every ${alert.reminder_frequency}h
+            </td>
+            <td style="padding: 0.75rem; vertical-align: top;">
+              <button onclick="archiveAlert('${alert.id}')" style="color: #dc2626; font-size: 0.8rem; background: none; border: none; cursor: pointer; margin-right: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s;">
+                Archive
               </button>
-              <button class="text-blue-600 hover:text-blue-900" onclick="editAlert('${alert.id}')">
-                <i class="fas fa-edit"></i> Edit
+              <button onclick="editAlert('${alert.id}')" style="color: #2563eb; font-size: 0.8rem; background: none; border: none; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s;">
+                Edit
               </button>
             </td>
           </tr>
@@ -116,13 +145,55 @@ async function loadAlerts() {
       tableBody.innerHTML = tableHTML;
       updateStats(alerts);
     } else {
-      document.getElementById('adminAlertsTable').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Failed to load alerts</td></tr>';
-      updateStats([], []);
+      document.getElementById('alertsTableBody').innerHTML = '<tr><td colspan="8" style="padding: 1.5rem; text-align: center; color: #ef4444; font-size: 0.875rem;">Failed to load alerts</td></tr>';
+      updateStats([]);
     }
   } catch (error) {
     console.error('Error loading alerts:', error);
-    document.getElementById('adminAlertsTable').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error loading alerts</td></tr>';
-    updateStats([], []);
+    document.getElementById('alertsTableBody').innerHTML = '<tr><td colspan="8" style="padding: 1.5rem; text-align: center; color: #ef4444; font-size: 0.875rem;">Error loading alerts</td></tr>';
+    updateStats([]);
+  }
+}
+
+async function loadTeams() {
+  try {
+    const res = await fetch('/alerts/admin/teams/', {
+      headers: {
+        'X-CSRFToken': getCSRFToken()
+      }
+    });
+
+    if (res.status === 401 || res.status === 403) {
+      window.location.href = '../index.html';
+      return;
+    }
+
+    if (res.ok) {
+      const teams = await res.json();
+      const teamsTableBody = document.getElementById('teamsTableBody');
+      
+      if (teams.length === 0) {
+        teamsTableBody.innerHTML = '<tr><td colspan="2" style="padding: 1.5rem; text-align: center; color: #6b7280; font-size: 0.875rem;">No teams available</td></tr>';
+        return;
+      }
+
+      let tableHTML = '';
+      teams.forEach(team => {
+        tableHTML += `
+          <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 0.75rem; vertical-align: top; font-weight: 500; color: #1f2937;">${team.name}</td>
+            <td style="padding: 0.75rem; vertical-align: top; color: #4b5563;">${team.members.join(', ')}</td>
+          </tr>
+        `;
+      });
+      
+      teamsTableBody.innerHTML = tableHTML;
+    } else {
+      document.getElementById('teamsTableBody').innerHTML = '<tr><td colspan="2" style="padding: 1.5rem; text-align: center; color: #ef4444; font-size: 0.875rem;">Failed to load teams</td></tr>';
+    }
+  } catch (error) {
+    console.error('Error loading teams:', error);
+    document.getElementById('teamsTableBody').innerHTML = '<tr><td colspan="2" style="padding: 1.5rem; text-align: center; color: #ef4444; font-size: 0.875rem;">Error loading teams</td></tr>';
   }
 }
 
@@ -132,13 +203,13 @@ function truncateText(text, maxLength) {
   return text.substr(0, maxLength) + '...';
 }
 
-// Helper function to get appropriate class based on severity for full badges
-function getSeverityClassFull(severity) {
+// Helper function to get appropriate style based on severity
+function getSeverityStyle(severity) {
   switch(severity) {
-    case 'INFO': return 'bg-blue-100 text-blue-800';
-    case 'WARNING': return 'bg-yellow-100 text-yellow-800';
-    case 'CRITICAL': return 'bg-red-100 text-red-800';
-    default: return 'bg-gray-100 text-gray-800';
+    case 'INFO': return 'background-color: #dbeafe; color: #1d4ed8;';
+    case 'WARNING': return 'background-color: #fef9c3; color: #854d0e;';
+    case 'CRITICAL': return 'background-color: #fecaca; color: #b91c1c;';
+    default: return 'background-color: #e5e7eb; color: #374151;';
   }
 }
 
@@ -177,23 +248,26 @@ function editAlert(alertId) {
 
 // Function to update statistics
 function updateStats(alerts) {
-  // Calculate stats
-  const totalAlerts = alerts.length;
-  const activeAlerts = alerts.filter(alert => alert.is_active).length;
-  const criticalAlerts = alerts.filter(alert => alert.severity === 'CRITICAL').length;
-  
-  // Update sidebar stats
-  document.getElementById('totalAlerts').textContent = totalAlerts;
-  document.getElementById('activeAlerts').textContent = activeAlerts;
-  document.getElementById('criticalAlerts').textContent = criticalAlerts;
-  
-  // Update top stats
-  document.getElementById('stats-total').textContent = totalAlerts;
-  document.getElementById('stats-active').textContent = activeAlerts;
-  document.getElementById('stats-critical').textContent = criticalAlerts;
+  fetch('/alerts/admin/analytics/')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('totalAlerts').textContent = data.total_alerts;
+      document.getElementById('alertsDelivered').textContent = data.delivered;
+      document.getElementById('alertsRead').textContent = data.read;
+      document.getElementById('alertsSnoozed').textContent = data.snoozed;
+    });
+
+  document.getElementById('activeAlerts').textContent = alerts.filter(a => a.is_active).length;
+  document.getElementById('criticalAlerts').textContent = alerts.filter(a => a.severity === 'CRITICAL').length;
 }
 
-// Load alerts on page load
+// Load alerts and teams on page load
 document.addEventListener('DOMContentLoaded', function() {
+  loadAlerts();
+  loadTeams();
+});
+
+// Add refresh button functionality (it's defined in HTML but let's make sure it works)
+document.getElementById('refreshAlerts')?.addEventListener('click', function() {
   loadAlerts();
 });

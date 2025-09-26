@@ -3,218 +3,223 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - Alert Management</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <title>Admin Dashboard - Alertify</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <!-- Top Navigation -->
-  <nav class="bg-green-700 text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex items-center">
-          <div class="flex-shrink-0 flex items-center">
-            <i class="fas fa-bell mr-2"></i>
-            <span class="text-xl font-bold">Alert Management System</span>
-          </div>
+<body class="overflow-y-auto" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+  <div class="main-container" style="max-width: 100%; padding: 0; padding-top: 1rem;">
+    <!-- Header Section -->
+    <div class="header-section" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; width: 100%;">
+      <div style="display: flex; align-items: center;">
+        <div class="logo-container" style="width: 60px; height: 60px; margin: 0 1rem 0 0;">
+          <span class="logo-icon" style="font-size: 1.5rem;">🔔</span>
         </div>
-        <div class="flex items-center">
-          <span class="mr-4">Admin</span>
-          <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center">
-            <i class="fas fa-sign-out-alt mr-1"></i> Logout
-          </button>
+        <div>
+          <h1 class="title" style="font-size: 1.5rem; margin: 0; text-align: left;">Admin Dashboard</h1>
+          <p class="subtitle" style="font-size: 0.75rem; margin: 0.25rem 0 0 0; text-align: left;">Alertify</p>
         </div>
+      </div>
+      <div>
+        <button id="logoutBtn" class="btn admin-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          Logout
+        </button>
       </div>
     </div>
-  </nav>
 
-  <!-- Main Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <!-- Sidebar -->
-      <div class="lg:col-span-1">
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold mb-4">Dashboard Menu</h2>
-          <ul class="space-y-2">
-            <li class="border-b pb-2">
-              <a href="#" class="text-green-700 font-medium flex items-center">
-                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-              </a>
-            </li>
-            <li class="border-b pb-2">
-              <a href="#" class="text-gray-600 hover:text-green-700 flex items-center">
-                <i class="fas fa-bell mr-2"></i> Active Alerts
-              </a>
-            </li>
-            <li class="border-b pb-2">
-              <a href="#" class="text-gray-600 hover:text-green-700 flex items-center">
-                <i class="fas fa-archive mr-2"></i> Archived Alerts
-              </a>
-            </li>
-            <li>
-              <a href="#" class="text-gray-600 hover:text-green-700 flex items-center">
-                <i class="fas fa-users mr-2"></i> User Management
-              </a>
-            </li>
-          </ul>
-          
-          <div class="mt-8 p-4 bg-blue-50 rounded-lg">
-            <h3 class="font-medium text-blue-800">Quick Stats</h3>
-            <div class="mt-2 space-y-2">
-              <div class="flex justify-between">
-                <span>Total Alerts:</span>
-                <span id="totalAlerts" class="font-medium">0</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Active Alerts:</span>
-                <span id="activeAlerts" class="font-medium">0</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Critical Alerts:</span>
-                <span id="criticalAlerts" class="font-medium">0</span>
-              </div>
-            </div>
-          </div>
+    <!-- Main Content Area -->
+    <div style="display: flex; flex-direction: column; width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 1rem;">
+      <!-- Stats Cards Row -->
+      <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <div class="card" style="flex: 1; min-width: 200px; padding: 1rem; text-align: center; background: linear-gradient(to right, #dbeafe, #bfdbfe);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔔</div>
+          <p style="color: #4b5563; font-size: 0.8rem; margin-bottom: 0.25rem;">Total Alerts</p>
+          <p class="text-2xl font-bold" id="totalAlerts" style="font-size: 1.75rem;">0</p>
+        </div>
+        <div class="card" style="flex: 1; min-width: 200px; padding: 1rem; text-align: center; background: linear-gradient(to right, #fef9c3, #feecb0);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✅</div>
+          <p style="color: #4b5563; font-size: 0.8rem; margin-bottom: 0.25rem;">Delivered</p>
+          <p class="text-2xl font-bold" id="alertsDelivered" style="font-size: 1.75rem;">0</p>
+        </div>
+        <div class="card" style="flex: 1; min-width: 200px; padding: 1rem; text-align: center; background: linear-gradient(to right, #bbf7d0, #86efac);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📖</div>
+          <p style="color: #4b5563; font-size: 0.8rem; margin-bottom: 0.25rem;">Read</p>
+          <p class="text-2xl font-bold" id="alertsRead" style="font-size: 1.75rem;">0</p>
+        </div>
+        <div class="card" style="flex: 1; min-width: 200px; padding: 1rem; text-align: center; background: linear-gradient(to right, #ddd6fe, #c4b5fd);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⏸️</div>
+          <p style="color: #4b5563; font-size: 0.8rem; margin-bottom: 0.25rem;">Snoozed</p>
+          <p class="text-2xl font-bold" id="alertsSnoozed" style="font-size: 1.75rem;">0</p>
         </div>
       </div>
 
-      <!-- Main Content Area -->
-      <div class="lg:col-span-3 space-y-6">
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-white p-6 rounded-lg shadow flex items-center">
-            <div class="p-3 bg-blue-100 rounded-full mr-4">
-              <i class="fas fa-bell text-blue-600 text-xl"></i>
-            </div>
-            <div>
-              <p class="text-gray-500">Total Alerts</p>
-              <p class="text-2xl font-bold" id="stats-total">0</p>
-            </div>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow flex items-center">
-            <div class="p-3 bg-yellow-100 rounded-full mr-4">
-              <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
-            </div>
-            <div>
-              <p class="text-gray-500">Active Alerts</p>
-              <p class="text-2xl font-bold" id="stats-active">0</p>
-            </div>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow flex items-center">
-            <div class="p-3 bg-red-100 rounded-full mr-4">
-              <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
-            </div>
-            <div>
-              <p class="text-gray-500">Critical Alerts</p>
-              <p class="text-2xl font-bold" id="stats-critical">0</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Create Alert Card -->
-        <div class="bg-white p-6 rounded-lg shadow">
-          <h2 class="text-xl font-bold mb-4 flex items-center">
-            <i class="fas fa-plus-circle text-green-600 mr-2"></i> Create New Alert
-          </h2>
-          <form id="createAlertForm" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Main Content Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; width: 100%;">
+        <!-- Left Panel - Create Alert -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <!-- Create Alert Card -->
+          <div class="card" style="padding: 1.5rem;">
+            <h2 class="card-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">Create New Alert</h2>
+            <form id="createAlertForm" class="space-y-3">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                <input type="text" id="alertTitle" required 
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Title *</label>
+                <input type="text" name="title" required 
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  placeholder="Alert title">
               </div>
+              
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Severity *</label>
-                <select id="alertSeverity" required 
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Message *</label>
+                <textarea name="message" required rows="3" 
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  placeholder="Alert message"></textarea>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Severity *</label>
+                <select name="severity" required 
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <option value="">Select Severity</option>
                   <option value="INFO">Info</option>
                   <option value="WARNING">Warning</option>
                   <option value="CRITICAL">Critical</option>
                 </select>
               </div>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Message *</label>
-              <textarea id="alertMessage" required rows="3" 
-                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Start Time *</label>
-                <input type="datetime-local" id="startTime" required 
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Time *</label>
-                <input type="datetime-local" id="expiryTime" required 
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-              </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Visibility *</label>
-                <select id="visibility" required 
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-                  <option value="ORG">Organization</option>
-                  <option value="TEAM">Team</option>
-                  <option value="USER">User</option>
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Delivery Type *</label>
+                <select name="delivery_type" required 
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                  <option value="INAPP">In-App (MVP)</option>
                 </select>
               </div>
+              
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Reminder Frequency (hours)</label>
-                <input type="number" id="reminderFreq" value="2" min="1" max="168"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Start Time *</label>
+                <input type="datetime-local" name="start_time" required 
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Expiry Time *</label>
+                <input type="datetime-local" name="expiry_time" required 
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 text-center">Reminder Frequency (hours)</label>
+                <input type="number" name="reminder_frequency" min="1" value="2"
+                  class="w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  placeholder="Frequency in hours">
+              </div>
+              
+              <div class="flex items-center">
+                <label class="flex items-center">
+                  <input type="checkbox" name="reminder_enabled" checked
+                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                  <span class="ml-2 text-sm text-gray-600">Enable Reminders</span>
+                </label>
+              </div>
+              
+              <button type="submit" class="btn admin-btn" style="width: 100%; margin-top: 1rem;">
+                Create Alert
+              </button>
+              <div id="creationStatus" class="text-green-600 text-sm text-center mt-1"></div>
+            </form>
+          </div>
+
+          <!-- Quick Stats Card -->
+          <div class="card" style="padding: 1.5rem;">
+            <h3 style="font-size: 1rem; font-weight: 600; color: #1f2937; margin-bottom: 0.75rem; text-align: center;">Quick Stats</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280; font-size: 0.8rem;">Total Alerts:</span>
+                <span id="totalAlerts" style="font-weight: 500; font-size: 0.8rem;">0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280; font-size: 0.8rem;">Active Alerts:</span>
+                <span id="activeAlerts" style="font-weight: 500; font-size: 0.8rem;">0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280; font-size: 0.8rem;">Critical Alerts:</span>
+                <span id="criticalAlerts" style="font-weight: 500; font-size: 0.8rem;">0</span>
               </div>
             </div>
-            
-            <div class="flex justify-end pt-4">
-              <button type="submit" 
-                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md flex items-center">
-                <i class="fas fa-paper-plane mr-2"></i> Create Alert
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
 
-        <!-- Manage Alerts Section -->
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold flex items-center">
-              <i class="fas fa-tasks text-blue-600 mr-2"></i> Manage Alerts
-            </h2>
-            <div class="flex space-x-2">
-              <button id="refreshAlerts" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded flex items-center">
-                <i class="fas fa-sync-alt mr-2"></i> Refresh
-              </button>
-            </div>
+        <!-- Right Panel - Manage Alerts -->
+        <div class="card" style="padding: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 class="card-title" style="font-size: 1.25rem; text-align: center; margin: 0;">Manage Alerts</h2>
           </div>
           
-          <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Severity</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visibility</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          <!-- Filters -->
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+            <select id="filterSeverity" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;">
+              <option value="">Filter by Severity</option>
+              <option value="INFO">Info</option>
+              <option value="WARNING">Warning</option>
+              <option value="CRITICAL">Critical</option>
+            </select>
+            <select id="filterStatus" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;">
+              <option value="">Filter by Status</option>
+              <option value="active">Active</option>
+              <option value="expired">Expired</option>
+            </select>
+            <select id="filterAudience" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;">
+              <option value="">Filter by Audience</option>
+              <option value="ORG">Organization</option>
+              <option value="TEAM">Team</option>
+              <option value="USER">User</option>
+            </select>
+            <button id="applyFilters" style="background-color: #10b981; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; font-size: 0.875rem; cursor: pointer;">
+              Apply Filters
+            </button>
+          </div>
+          
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+              <thead>
+                <tr style="background-color: #f3f4f6;">
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Title</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Severity</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Audience</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Start Time</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Expiry Time</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Status</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Reminders</th>
+                  <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Actions</th>
                 </tr>
               </thead>
-              <tbody id="adminAlertsTable" class="bg-white divide-y divide-gray-200">
+              <tbody id="alertsTableBody">
                 <!-- Alerts will be loaded here -->
-                <tr>
-                  <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                    Loading alerts...
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
+      
+      <!-- Teams & Members Section -->
+      <div class="card" style="padding: 1.5rem; margin-top: 1.5rem;">
+        <h2 class="card-title" style="font-size: 1.25rem; text-align: center; margin-bottom: 1rem;">Teams & Members</h2>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+            <thead>
+              <tr style="background-color: #f3f4f6;">
+                <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Team</th>
+                <th style="padding: 0.75rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #6b7280; border-bottom: 2px solid #e5e7eb;">Members</th>
+              </tr>
+            </thead>
+            <tbody id="teamsTableBody">
+              <!-- Teams will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" style="margin-top: 2rem; padding: 0 2rem;">
+      <p>© 2025 Alert Management System. All rights reserved.</p>
     </div>
   </div>
 
