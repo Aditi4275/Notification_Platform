@@ -17,12 +17,12 @@ body {
   justify-content: center;
   padding: 20px;
   margin: 0;
-  overflow: hidden; /* Prevent any scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
 html {
   height: 100%;
-  overflow: hidden; /* Prevent any scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
 /* Main container */
@@ -32,6 +32,7 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto; /* Allow vertical scrolling within container */
 }
 
 /* Header section */
