@@ -33,17 +33,16 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1',
-    '.up.railway.app',  # Render default domain pattern
-    '.onrender.com',    # Render domain pattern
+    '.up.railway.app',  
+    '.onrender.com',    
 ]
 
 # CSRF settings
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = True  # Set to True in production with HTTPS
+CSRF_COOKIE_SECURE = True  
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',  # Keep this for Django admin interface
+    'django.contrib.staticfiles', 
     'rest_framework',
     'alerts',
     'corsheaders',
@@ -70,7 +69,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add WhiteNoise for serving static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,7 +83,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://*.onrender.com",  # Allow requests from Render domains
+    "https://*.onrender.com",  
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -92,8 +91,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://*.onrender.com',  # Add Render domains to trusted origins
-]
+    'https://*.onrender.com',  
 
 ROOT_URLCONF = 'notification_platform.urls'
 
@@ -192,4 +190,4 @@ LOGIN_REDIRECT_URL = '/frontend/user_dashboard.html'
 LOGOUT_REDIRECT_URL = '/frontend/index.html'
 
 # For production, this should be False or properly configured
-CORS_ALLOW_ALL_ORIGINS = False  # Change from True to respect CORS_ALLOWED_ORIGINS
+CORS_ALLOW_ALL_ORIGINS = False  
