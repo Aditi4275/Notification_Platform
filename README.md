@@ -30,6 +30,16 @@ A comprehensive notification platform that allows users to receive alerts and ad
 - `PATCH /alerts/user/{id}/mark_read/` - Mark alert as read/unread
 - `GET /alerts/analytics/` - Get analytics summary (Admin only)
 
+### User Profile Management
+
+- `GET /alerts/user/profile/` - Get user profile information
+- `PATCH /alerts/user/profile/` - Update user profile information
+
+### Admin Dashboard Endpoints
+
+- `GET /alerts/admin/analytics/` - Get admin dashboard analytics data
+- `GET /alerts/admin/teams/` - Get teams and members information for admin dashboard
+
 ## Setup Instructions ⚙️
 
 1. **Clone the repository:**
