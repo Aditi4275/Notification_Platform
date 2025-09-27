@@ -10,7 +10,7 @@ services:
     name: notification-platform
     runtime: python
     buildCommand: "/build.sh"
-    startCommand: "gunicorn notification_platform.asgi:application  -k uvicorn.workers.UvicornWorker"
+    startCommand: "gunicorn notification_platform.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -21,4 +21,4 @@ services:
       - key: WEB_CONCURRENCY
         value: "4"
       - key: DEBUG
-        value: "true"
+        value: "false"

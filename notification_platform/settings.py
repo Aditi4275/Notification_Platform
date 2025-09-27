@@ -29,12 +29,18 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-3efs)861dzst7(=umxt&#ro7(8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
+# For production on Render, ALLOWED_HOSTS should be specific
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1',
+    '.up.railway.app',  # Render default domain pattern
+    '.onrender.com',    # Render domain pattern
+]
 
 # CSRF settings
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_SECURE = True  # Set to True in production with HTTPS
 
 
 # Application definition
@@ -64,6 +70,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add WhiteNoise for serving static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,6 +84,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://*.onrender.com",  # Allow requests from Render domains
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -84,6 +92,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'https://*.onrender.com',  # Add Render domains to trusted origins
 ]
 
 ROOT_URLCONF = 'notification_platform.urls'
@@ -110,12 +119,23 @@ WSGI_APPLICATION = 'notification_platform.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# Parse DATABASE_URL environment variable if available (for Render)
+if os.getenv('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # For local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
@@ -157,6 +177,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend'),
 ]
 
+# For production on Render
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Enable WhiteNoise settings for serving static files in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -166,4 +191,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/frontend/user_dashboard.html'
 LOGOUT_REDIRECT_URL = '/frontend/index.html'
 
-CORS_ALLOW_ALL_ORIGINS = True # For development only, restrict in production
+# For production, this should be False or properly configured
+CORS_ALLOW_ALL_ORIGINS = False  # Change from True to respect CORS_ALLOWED_ORIGINS
